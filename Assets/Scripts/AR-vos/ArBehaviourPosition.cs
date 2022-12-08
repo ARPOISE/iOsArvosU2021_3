@@ -451,8 +451,8 @@ namespace com.arpoise.arpoiseapp
                     InitialDeviceOrientation = Input.deviceOrientation;
                 }
 
-                // For the first 2 seconds we remember the initial camera heading
-                if (CameraIsInitializing && StartTicks > 0 && DateTime.Now.Ticks > StartTicks + 20000000)
+                // For the first half second we remember the initial camera heading
+                if (CameraIsInitializing && StartTicks > 0 && DateTime.Now.Ticks > StartTicks + 5000000)
                 {
                     CameraIsInitializing = false;
                 }

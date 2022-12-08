@@ -133,7 +133,7 @@ namespace com.arpoise.arpoiseapp
 #if HAS_AR_KIT
         private readonly string _clientApplicationName = ArvosApplicationName;
 #else
-#if HAS_AR_FOUNDATION_4_2
+#if AndroidArvosU2021_3
         private readonly string _clientApplicationName = ArvosApplicationName;
 #else
         private readonly string _clientApplicationName = ArpoiseApplicationName;
@@ -1005,6 +1005,12 @@ namespace com.arpoise.arpoiseapp
             }
 #endif
 #if AndroidArvosU2021_3
+            if (url.Contains("www.arpoise.com/AB/") && !url.Contains("www.arpoise.com/AB/U2021_3/"))
+            {
+                url = url.Replace("www.arpoise.com/AB/", "www.arpoise.com/AB/U2021_3/");
+            }
+#endif
+#if AndroidArpoiseU2021_3
             if (url.Contains("www.arpoise.com/AB/") && !url.Contains("www.arpoise.com/AB/U2021_3/"))
             {
                 url = url.Replace("www.arpoise.com/AB/", "www.arpoise.com/AB/U2021_3/");
