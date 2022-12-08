@@ -410,15 +410,22 @@ namespace com.arpoise.arpoiseapp
 
             if ((poi.Latitude == 0 && poi.Longitude == 0) || !string.IsNullOrWhiteSpace(relativePosition))
             {
-                ArObject arObject;
-                if (parentObject != null)
+                var containsPlus = relativePosition.Contains('+');
+                if (containsPlus)
                 {
-                    // Relative to parent
-                    var relativeLocation = poi.poiObject.RelativeLocation;
+                    relativePosition.Replace("+", string.Empty);
+                }
 
-                    var xOffset = relativeLocation[0];
-                    var yOffset = relativeLocation[1];
-                    var zOffset = relativeLocation[2];
+                ArObject arObject;
+                var relativeLocation = poi.poiObject.RelativeLocation;
+
+                var xOffset = relativeLocation[0];
+                var yOffset = relativeLocation[1];
+                var zOffset = relativeLocation[2];
+
+                if (parentObject != null || !containsPlus)
+                {
+                    // Relative to parent, or relative to user device in meters
                     arObject = new ArObject(
                         poi, arObjectId, poi.title, objectToAdd.name, poi.BaseUrl, wrapper, objectToAdd,
                         poi.Latitude, poi.Longitude, poi.relativeAlt + yOffset, true);
@@ -433,12 +440,7 @@ namespace com.arpoise.arpoiseapp
                 }
                 else
                 {
-                    // Relative to user
-                    var relativeLocation = poi.poiObject.RelativeLocation;
-
-                    var xOffset = relativeLocation[0];
-                    var yOffset = relativeLocation[1];
-                    var zOffset = relativeLocation[2];
+                    // Create longitude and latitude relative to user device
                     var latitude = AddMetersToLatitude(UsedLatitude, zOffset);
                     var longitude = AddMetersToLongitude(UsedLatitude, UsedLongitude, xOffset);
 

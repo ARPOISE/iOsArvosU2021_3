@@ -112,12 +112,11 @@ namespace com.arpoise.arpoiseapp
         {
             get
             {
-                var relativePosition = relativeLocation;
-                if (string.IsNullOrWhiteSpace(relativePosition))
+                if (string.IsNullOrWhiteSpace(relativeLocation))
                 {
                     return new float[] { 0, 0, 0 };
                 }
-                var parts = relativePosition.Split(',');
+                var parts = relativeLocation.Split(',');
 
                 double value;
                 var xOffset = (float)(parts.Length > 0 && double.TryParse(parts[0].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out value) ? value : 0);
