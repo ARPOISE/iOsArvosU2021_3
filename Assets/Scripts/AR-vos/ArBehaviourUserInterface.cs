@@ -453,7 +453,14 @@ namespace com.arpoise.arpoiseapp
             SceneAnchor.transform.localEulerAngles = new Vector3(0, 0, 0);
 
             // Update the objects shown
-            HasHitOnObject = UpdateArObjects();
+            try
+            {
+                HasHitOnObject = UpdateArObjects();
+            }
+            catch (Exception e)
+            {
+                ErrorMessage = e.Message;
+            }
 
             SceneAnchor.transform.localEulerAngles = new Vector3(0, -InitialHeading, 0);
 

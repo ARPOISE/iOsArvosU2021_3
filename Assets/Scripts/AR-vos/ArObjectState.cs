@@ -261,11 +261,8 @@ namespace com.arpoise.arpoiseapp
             var hit = false;
             if (_onClickAnimations.Count > 0 && Input.GetMouseButtonDown(0))
             {
-                var cameraMain = Camera.main;
-                var ray = cameraMain.ScreenPointToRay(Input.mousePosition);
-
-                RaycastHit hitInfo;
-                if (Physics.Raycast(ray, out hitInfo, 1500f))
+                var ray = arBehaviour.ArCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity))
                 {
                     var objectHit = hitInfo.transform.gameObject;
                     if (objectHit != null)
