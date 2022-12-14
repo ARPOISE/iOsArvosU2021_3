@@ -102,6 +102,11 @@ namespace com.arpoise.arpoiseapp
         protected bool CameraIsInitializing = true;
         protected long StartTicks = 0;
 
+        public float GetInitialHeading()
+        {
+            return InitialHeading;
+        }
+
         public virtual bool InfoPanelIsActive()
         {
             return false;
@@ -316,6 +321,32 @@ namespace com.arpoise.arpoiseapp
                         FilteredLongitude = OriginalLongitude + 0.000001f * random.Next(-12, 12);
                         Debug.Log("QUEST_ARPOISE new location, lat " + FilteredLatitude + ", lon " + FilteredLongitude);
                     }
+                    var arObjectState = ArObjectState;
+                    if (arObjectState != null)
+                    {
+                        PlaceArObjects(arObjectState);
+                    }
+                    yield return new WaitForSeconds(.1f);
+                }
+            }
+            // End of quest mode
+#endif
+#if AndroidArvosU2021_3_Test
+            //Test mode, set a fixed initial location and forget about the location service
+            //
+            {
+                InitialHeading = 30;
+                FilteredLatitude = OriginalLatitude = 48.158f;
+                FilteredLongitude = OriginalLongitude = 11.58f;
+
+                Debug.Log("QUEST_ARPOISE fixed location, lat " + OriginalLatitude + ", lon " + OriginalLongitude);
+
+                var second = DateTime.Now.Ticks / 10000000L;
+                var random = new System.Random((int)second);
+                var nextMove = second + 5 + random.Next(0, 5);
+
+                while (second > 0)
+                {
                     var arObjectState = ArObjectState;
                     if (arObjectState != null)
                     {

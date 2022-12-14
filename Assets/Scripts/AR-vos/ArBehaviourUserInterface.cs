@@ -349,11 +349,13 @@ namespace com.arpoise.arpoiseapp
                 Application.Quit();
             }
 
+#if AndroidArvosU2021_3_Test
+#else
             if (CameraIsInitializing)
             {
                 InitialHeading = Input.compass.trueHeading;
             }
-
+#endif
             var camera = ArCamera;
             if (camera != null && camera.transform != null && camera.transform.forward != null)
             {
@@ -392,7 +394,10 @@ namespace com.arpoise.arpoiseapp
             if (IsNewLayer)
             {
                 IsNewLayer = false;
+#if AndroidArvosU2021_3_Test
+#else
                 InitialHeading = Input.compass.trueHeading;
+#endif
             }
 
             // Set any error text onto the canvas
@@ -450,8 +455,6 @@ namespace com.arpoise.arpoiseapp
                 _currentSecond = CurrentSecond;
             }
 
-            SceneAnchor.transform.localEulerAngles = new Vector3(0, 0, 0);
-
             // Update the objects shown
             try
             {
@@ -462,7 +465,10 @@ namespace com.arpoise.arpoiseapp
                 ErrorMessage = e.Message;
             }
 
-            SceneAnchor.transform.localEulerAngles = new Vector3(0, -InitialHeading, 0);
+            if (SceneAnchor.transform.localEulerAngles.y != -InitialHeading)
+            {
+                SceneAnchor.transform.localEulerAngles = new Vector3(0, -InitialHeading, 0);
+            }
 
             // If we moved away from the current layer
             //if (!CheckDistance())
@@ -625,6 +631,6 @@ namespace com.arpoise.arpoiseapp
                 }
             }
         }
-        #endregion
+#endregion
     }
 }
