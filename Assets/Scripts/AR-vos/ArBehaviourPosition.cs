@@ -77,7 +77,11 @@ namespace com.arpoise.arpoiseapp
 #if HAS_AR_KIT
         protected const string AppName = "AR-vos";
 #else
+#if AndroidArvosU2021_3
+        protected const string AppName = "AR-vos";
+#else
         protected const string AppName = "ARpoise";
+#endif
 #endif
 #endif
         protected const float PositionTolerance = 1.25f;
@@ -482,8 +486,8 @@ namespace com.arpoise.arpoiseapp
                     InitialDeviceOrientation = Input.deviceOrientation;
                 }
 
-                // For the first half second we remember the initial camera heading
-                if (CameraIsInitializing && StartTicks > 0 && DateTime.Now.Ticks > StartTicks + 5000000)
+                // For the first 300 milliseconds we remember the initial camera heading
+                if (CameraIsInitializing && StartTicks > 0 && DateTime.Now.Ticks > StartTicks + 3000000)
                 {
                     CameraIsInitializing = false;
                 }
