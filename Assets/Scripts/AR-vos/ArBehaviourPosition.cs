@@ -335,11 +335,11 @@ namespace com.arpoise.arpoiseapp
             //Test mode, set a fixed initial location and forget about the location service
             //
             {
-                InitialHeading = 30;
+                InitialHeading = 0;
                 FilteredLatitude = OriginalLatitude = 48.158f;
                 FilteredLongitude = OriginalLongitude = 11.58f;
 
-                Debug.Log("QUEST_ARPOISE fixed location, lat " + OriginalLatitude + ", lon " + OriginalLongitude);
+                Debug.Log("Fixed location, lat " + OriginalLatitude + ", lon " + OriginalLongitude);
 
                 var second = DateTime.Now.Ticks / 10000000L;
                 var random = new System.Random((int)second);
