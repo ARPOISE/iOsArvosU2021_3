@@ -252,6 +252,44 @@ namespace com.arpoise.arpoiseapp
         }
 
         [NonSerialized]
+        private string _allAugmentsPlaced = null;
+        public string AllAugmentsPlaced
+        {
+            get
+            {
+                if (_allAugmentsPlaced is null)
+                {
+                    _allAugmentsPlaced = string.Empty;
+                    var action = actions?.FirstOrDefault(x => x.showActivity && nameof(AllAugmentsPlaced).Equals(x.label?.Trim()));
+                    if (action != null)
+                    {
+                        _allAugmentsPlaced = action.activityMessage ?? string.Empty;
+                    }
+                }
+                return _allAugmentsPlaced;
+            }
+        }
+
+        [NonSerialized]
+        private string _requestedDetectionMode = null;
+        public string RequestedDetectionMode
+        {
+            get
+            {
+                if (_requestedDetectionMode is null)
+                {
+                    _requestedDetectionMode = string.Empty;
+                    var action = actions?.FirstOrDefault(x => x.showActivity && nameof(RequestedDetectionMode).Equals(x.label?.Trim()));
+                    if (action != null)
+                    {
+                        _requestedDetectionMode = action.activityMessage ?? string.Empty;
+                    }
+                }
+                return _requestedDetectionMode;
+            }
+        }
+
+        [NonSerialized]
         private int _triggerObjectKeepAlive = -1;
         public int TriggerObjectKeepAlive
         {

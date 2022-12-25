@@ -119,6 +119,38 @@ namespace com.arpoise.arpoiseapp
             }
         }
 
+        public string AllAugmentsPlaced
+        {
+            get
+            {
+                foreach (var slamObject in SlamObjects.Where(x => x.poi != null && x.layerWebUrl == LayerWebUrl))
+                {
+                    var allAugmentsPlaced = slamObject.poi.AllAugmentsPlaced;
+                    if (!string.IsNullOrEmpty(allAugmentsPlaced))
+                    {
+                        return allAugmentsPlaced;
+                    }
+                }
+                return "All augments placed.";
+            }
+        }
+
+        public string RequestedDetectionMode
+        {
+            get
+            {
+                foreach (var slamObject in SlamObjects.Where(x => x.poi != null && x.layerWebUrl == LayerWebUrl))
+                {
+                    var requestedDetectionMode = slamObject.poi.RequestedDetectionMode;
+                    if (!string.IsNullOrEmpty(requestedDetectionMode))
+                    {
+                        return requestedDetectionMode;
+                    }
+                }
+                return null;
+            }
+        }
+
         #region Update
         protected override void Update()
         {

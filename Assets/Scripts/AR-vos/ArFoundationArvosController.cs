@@ -115,6 +115,7 @@ public class ArFoundationArvosController : ArBehaviourSlam
         {
             if (_arPlaneManager.enabled != IsSlam)
             {
+                _arPlaneManager.requestedDetectionMode = PlaneDetectionMode.Horizontal | PlaneDetectionMode.Vertical;
                 _arPlaneManager.enabled = IsSlam;
                 SetAllPlanesActive(IsSlam);
             }
@@ -189,13 +190,33 @@ public class ArFoundationArvosController : ArBehaviourSlam
                 {
                     _arRaycastManager.enabled = slamObjectsAvailable;
                 }
-
-                SetInfoText("All augments placed.");
+                SetInfoText(AllAugmentsPlaced);
                 return;
             }
 
             if (_arPlaneManager.enabled != IsSlam)
             {
+                if (nameof(PlaneDetectionMode.Vertical).Equals(RequestedDetectionMode))
+                {
+                    if (_arPlaneManager.requestedDetectionMode != PlaneDetectionMode.Vertical)
+                    {
+                        _arPlaneManager.requestedDetectionMode = PlaneDetectionMode.Vertical;
+                    }
+                }
+                else if (nameof(PlaneDetectionMode.Horizontal).Equals(RequestedDetectionMode))
+                {
+                    if (_arPlaneManager.requestedDetectionMode != PlaneDetectionMode.Horizontal)
+                    {
+                        _arPlaneManager.requestedDetectionMode = PlaneDetectionMode.Horizontal;
+                    }
+                }
+                else
+                {
+                    if (_arPlaneManager.requestedDetectionMode != (PlaneDetectionMode.Horizontal | PlaneDetectionMode.Vertical))
+                    {
+                        _arPlaneManager.requestedDetectionMode = PlaneDetectionMode.Horizontal | PlaneDetectionMode.Vertical;
+                    }
+                }
                 _arPlaneManager.enabled = IsSlam;
             }
             if (_arRaycastManager.enabled != IsSlam)
@@ -205,7 +226,7 @@ public class ArFoundationArvosController : ArBehaviourSlam
 
             if (!_slamVisualizers.Any())
             {
-                SetInfoText("Please tap on a plane.");
+                SetInfoText($"Please tap on a plane.");
             }
 
             if (HasHitOnObject)
