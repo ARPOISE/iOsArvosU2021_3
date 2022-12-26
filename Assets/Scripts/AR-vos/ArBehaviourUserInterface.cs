@@ -491,9 +491,6 @@ namespace com.arpoise.arpoiseapp
                 return;
             }
 
-            // Calculate heading
-            //var currentHeading = Input.compass.trueHeading;
-
             if (InfoText != null)
             {
                 // Set info text
@@ -516,11 +513,11 @@ namespace com.arpoise.arpoiseapp
                         message = message.Replace("{O}", string.Empty + arObjectState.CountArObjects());
                         message = message.Replace("{A}", string.Empty + arObjectState.NumberOfAnimations);
                         message = message.Replace("{T}", string.Empty + TriggerObjects.Values.Count(x => x.isActive));
-                        //message = message.Replace("{I}", string.Empty + TriggerImages.Count);
+                        message = message.Replace("{I}", string.Empty + TriggerImages.Count);
                         message = message.Replace("{S}", string.Empty + SlamObjects.Count(x => x.isActive));
 
                         message = message.Replace("{IC}", InitialCameraAngle.ToString("F1", CultureInfo.InvariantCulture));
-                        message = message.Replace("{I}", string.Empty + (int)InitialHeading);
+                        message = message.Replace("{IH}", string.Empty + (int)InitialHeading);
                         //message = message.Replace("{D}", string.Empty + DeviceAngle);
                         message = message.Replace("{Y}", string.Empty + (int)SceneAnchor.transform.localEulerAngles.y + " " + (int)SceneAnchor.transform.eulerAngles.y);
                         message = message.Replace("{C}", string.Empty + (int)Input.compass.trueHeading);
@@ -535,16 +532,16 @@ namespace com.arpoise.arpoiseapp
                         message = message.Replace("{LAT1}", (firstArObject != null ? firstArObject.Latitude : 0).ToString("F6", CultureInfo.InvariantCulture));
                         message = message.Replace("{LON1}", (firstArObject != null ? firstArObject.Longitude : 0).ToString("F6", CultureInfo.InvariantCulture));
                         message = message.Replace("{D1}", (firstArObject != null ? CalculateDistance(UsedLatitude, UsedLongitude, firstArObject.Latitude, firstArObject.Longitude) : 0).ToString("F1", CultureInfo.InvariantCulture));
-                        message = message.Replace("{DNS1}", (firstArObject != null ? CalculateDistance(UsedLatitude, UsedLongitude, firstArObject.Latitude, UsedLongitude) : 0).ToString("F1", CultureInfo.InvariantCulture));
-                        message = message.Replace("{DEW1}", (firstArObject != null ? CalculateDistance(UsedLatitude, UsedLongitude, UsedLatitude, firstArObject.Longitude) : 0).ToString("F1", CultureInfo.InvariantCulture));
+                        //message = message.Replace("{DNS1}", (firstArObject != null ? CalculateDistance(UsedLatitude, UsedLongitude, firstArObject.Latitude, UsedLongitude) : 0).ToString("F1", CultureInfo.InvariantCulture));
+                        //message = message.Replace("{DEW1}", (firstArObject != null ? CalculateDistance(UsedLatitude, UsedLongitude, UsedLatitude, firstArObject.Longitude) : 0).ToString("F1", CultureInfo.InvariantCulture));
 
-                        message = message.Replace("{DAVF}", DisplayAnimationValueForward.ToString("F1", CultureInfo.InvariantCulture));
-                        message = message.Replace("{DAVR}", DisplayAnimationValueRight.ToString("F1", CultureInfo.InvariantCulture));
-                        message = message.Replace("{DGPX}", DisplayGoalPosition.x.ToString("F1", CultureInfo.InvariantCulture));
-                        message = message.Replace("{DGPY}", DisplayGoalPosition.y.ToString("F1", CultureInfo.InvariantCulture));
-                        message = message.Replace("{DGPZ}", DisplayGoalPosition.z.ToString("F1", CultureInfo.InvariantCulture));
+                        //message = message.Replace("{DAVF}", DisplayAnimationValueForward.ToString("F1", CultureInfo.InvariantCulture));
+                        //message = message.Replace("{DAVR}", DisplayAnimationValueRight.ToString("F1", CultureInfo.InvariantCulture));
+                        //message = message.Replace("{DGPX}", DisplayGoalPosition.x.ToString("F1", CultureInfo.InvariantCulture));
+                        //message = message.Replace("{DGPY}", DisplayGoalPosition.y.ToString("F1", CultureInfo.InvariantCulture));
+                        //message = message.Replace("{DGPZ}", DisplayGoalPosition.z.ToString("F1", CultureInfo.InvariantCulture));
 
-                        message = message.Replace("{DSF}", DurationStretchFactor?.ToString("F2", CultureInfo.InvariantCulture));
+                        //message = message.Replace("{DSF}", DurationStretchFactor?.ToString("F2", CultureInfo.InvariantCulture));
 #if HAS_AR_FOUNDATION_4_2
                         message = message.Replace("{L}", ArMutableLibrary == null ? "null" : string.Empty + ArMutableLibrary.count);
                         var mString = "null";
@@ -597,7 +594,6 @@ namespace com.arpoise.arpoiseapp
                     //+ " D " + (int)DeviceAngle
                     //+ " Y " + (int)SceneAnchor.transform.eulerAngles.y
                     //+ " H " + (int)HeadingShown
-                    //+ " C " + (int)currentHeading
                     //+ " IH " + _initialHeading.ToString("F", CultureInfo.InvariantCulture)
                     //+ " N " + arObjectState.ArObjects.Sum(x => x.GameObjects.Count)
                     //+ " O " + _onFocusAnimations.Count

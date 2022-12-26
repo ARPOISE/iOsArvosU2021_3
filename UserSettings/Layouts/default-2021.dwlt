@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 1005
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Project
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 371}
   m_MaxSize: {x: 10000, y: 10000}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 317
+  controlID: 42
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 293
+  controlID: 96
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 294
+  controlID: 97
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -318,22 +318,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefabs
+    - Assets/Scripts/AR-vos
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Prefabs
+  - Assets/Scripts/AR-vos
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\Peter\eclipse-workspace\CvsArpoise\unity\AndroidArvosU2021_3
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: e8500000
-    m_LastClickedID: 20712
-    m_ExpandedIDs: 00000000d8500000da500000dc500000de500000e0500000e2500000e4500000e6500000e850000000ca9a3b
+    m_SelectedIDs: de500000
+    m_LastClickedID: 20702
+    m_ExpandedIDs: 00000000d4500000d6500000d8500000da500000dc500000de500000e0500000e2500000e450000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -361,7 +361,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d8500000da500000dc500000de500000e0500000e2500000e4500000e6500000e8500000
+    m_ExpandedIDs: 00000000d4500000d6500000d8500000da500000dc500000de500000e0500000e2500000e4500000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -491,9 +491,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: ba0d0000
       m_LastClickedID: 0
-      m_ExpandedIDs: c2caffff00cbffffe8ccffff58ceffff96ceffff7ed0ffffeed1ffff2cd2ffff14d4ffff86d5ffffc4d5ffffacd7ffff1ed9ffff5cd9ffff44dbffffb4dcfffff2dcffffdadeffff4ae0ffff88e0ffff70e2ffff7ee4ffffbce4ffffa4e6ffff14e8ffff52e8ffff3aeaffffaaebffffe8ebffffd0edffff8eefffffccefffffb4f1ffff50f3ffff8ef3ffff76f5ffff86f7ffffc4f7ffffb0f9ffff2cfbffff
+      m_ExpandedIDs: 2cfbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

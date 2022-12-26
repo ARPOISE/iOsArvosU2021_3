@@ -232,8 +232,7 @@ namespace com.arpoise.arpoiseapp
                 var cameraMain = Camera.main;
                 var ray = cameraMain.ScreenPointToRay(new Vector3(cameraMain.pixelWidth / 2, cameraMain.pixelHeight / 2, 0f));
 
-                RaycastHit hitInfo;
-                if (Physics.Raycast(ray, out hitInfo, 1500f))
+                if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity))
                 {
                     var objectHit = hitInfo.transform.gameObject;
                     if (objectHit != null)

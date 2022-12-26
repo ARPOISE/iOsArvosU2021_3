@@ -45,9 +45,6 @@ namespace com.arpoise.arpoiseapp
 #endif
     using UnityEngine;
 
-    /// <summary>
-    /// Uses 4 frame corner objects to visualize an AugmentedImage.
-    /// </summary>
     public class ArvosVisualizer : MonoBehaviour
     {
 #if HAS_AR_FOUNDATION_4_2

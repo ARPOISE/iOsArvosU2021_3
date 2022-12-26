@@ -62,8 +62,8 @@ public class ArFoundationArvosController : ArBehaviourSlam
         _arPlaneManager = ArSessionOrigin.GetComponent<ARPlaneManager>();
         _arRaycastManager = ArSessionOrigin.GetComponent<ARRaycastManager>();
         _placeOnPlane = ArSessionOrigin.GetComponent<PlaceOnPlane>();
-        ArSessionOriginScript = ArSessionOrigin.GetComponent<ARSessionOrigin>();
 
+        ArSessionOriginScript = ArSessionOrigin.GetComponent<ARSessionOrigin>();
         ArTrackedImageManager = ArSessionOrigin.GetComponent<ARTrackedImageManager>();
     }
 
@@ -74,6 +74,7 @@ public class ArFoundationArvosController : ArBehaviourSlam
         _arRaycastManager = ArSessionOrigin.GetComponent<ARRaycastManager>();
         _placeOnPlane = ArSessionOrigin.GetComponent<PlaceOnPlane>();
 
+        ArSessionOriginScript = ArSessionOrigin.GetComponent<ARSessionOrigin>();
         ArTrackedImageManager = ArSessionOrigin.GetComponent<ARTrackedImageManager>();
         ArMutableLibrary = ArTrackedImageManager.CreateRuntimeLibrary() as MutableRuntimeReferenceImageLibrary;
 
@@ -252,9 +253,9 @@ public class ArFoundationArvosController : ArBehaviourSlam
                 var hitPose = hits[0].pose;
 
                 int index = _slamHitCount++ % AvailableSlamObjects.Count;
-                TriggerObject triggerObject = AvailableSlamObjects[index];
+                var triggerObject = AvailableSlamObjects[index];
 
-                ArvosVisualizer visualizer = Instantiate(ArvosVisualizer, hitPose.position, hitPose.rotation);
+                var visualizer = Instantiate(ArvosVisualizer, hitPose.position, hitPose.rotation);
                 visualizer.Pose = hitPose;
                 visualizer.TriggerObject = triggerObject;
                 visualizer.ArBehaviour = this;
