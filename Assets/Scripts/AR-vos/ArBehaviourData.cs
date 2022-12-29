@@ -136,7 +136,11 @@ namespace com.arpoise.arpoiseapp
 #if AndroidArvosU2021_3
         private readonly string _clientApplicationName = ArvosApplicationName;
 #else
+#if iOsArvosU2021_3
+        private readonly string _clientApplicationName = ArvosApplicationName;
+#else
         private readonly string _clientApplicationName = ArpoiseApplicationName;
+#endif
 #endif
 #endif
 #endif
@@ -185,9 +189,7 @@ namespace com.arpoise.arpoiseapp
                 var nextPageKey = string.Empty;
 
                 IsSlam = false;
-#if HAS_AR_FOUNDATION_4_2
-                ArMutableLibrary = ArTrackedImageManager.CreateRuntimeLibrary() as MutableRuntimeReferenceImageLibrary;
-#endif
+
                 #region Download all pages of the layer
                 var layerWebUrl = LayerWebUrl;
                 LayerWebUrl = null;
@@ -1011,6 +1013,12 @@ namespace com.arpoise.arpoiseapp
             }
 #endif
 #if AndroidArpoiseU2021_3
+            if (url.Contains("www.arpoise.com/AB/") && !url.Contains("www.arpoise.com/AB/U2021_3/"))
+            {
+                url = url.Replace("www.arpoise.com/AB/", "www.arpoise.com/AB/U2021_3/");
+            }
+#endif
+#if iOsArvosU2021_3
             if (url.Contains("www.arpoise.com/AB/") && !url.Contains("www.arpoise.com/AB/U2021_3/"))
             {
                 url = url.Replace("www.arpoise.com/AB/", "www.arpoise.com/AB/U2021_3/");

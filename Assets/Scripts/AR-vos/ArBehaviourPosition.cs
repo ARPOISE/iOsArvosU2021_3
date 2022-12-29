@@ -80,7 +80,11 @@ namespace com.arpoise.arpoiseapp
 #if AndroidArvosU2021_3
         protected const string AppName = "AR-vos";
 #else
+#if iOsArvosU2021_3
+        protected const string AppName = "AR-vos";
+#else
         protected const string AppName = "ARpoise";
+#endif
 #endif
 #endif
 #endif

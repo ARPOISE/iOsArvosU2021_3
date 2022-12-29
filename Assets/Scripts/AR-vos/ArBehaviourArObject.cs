@@ -584,7 +584,7 @@ namespace com.arpoise.arpoiseapp
 #if HAS_AR_FOUNDATION_4_2
                         if (!isSlamUrl)
                         {
-                            ArMutableLibrary.ScheduleAddImageWithValidationJob(texture, triggerImageURL, width);
+                            ArMutableLibrary?.ScheduleAddImageWithValidationJob(texture, triggerImageURL, width);
                         }
 #endif
                     }

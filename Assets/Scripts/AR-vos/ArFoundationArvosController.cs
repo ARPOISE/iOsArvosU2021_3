@@ -76,7 +76,7 @@ public class ArFoundationArvosController : ArBehaviourSlam
 
         ArSessionOriginScript = ArSessionOrigin.GetComponent<ARSessionOrigin>();
         ArTrackedImageManager = ArSessionOrigin.GetComponent<ARTrackedImageManager>();
-        ArMutableLibrary = ArTrackedImageManager.CreateRuntimeLibrary() as MutableRuntimeReferenceImageLibrary;
+        ArTrackedImageManager.referenceLibrary = ArMutableLibrary = ArTrackedImageManager.CreateRuntimeLibrary() as MutableRuntimeReferenceImageLibrary;
 
         base.Start();
     }
@@ -106,9 +106,11 @@ public class ArFoundationArvosController : ArBehaviourSlam
             {
                 foreach (var visualizer in _imageVisualizers.Values)
                 {
-                    GameObject.Destroy(visualizer.gameObject);
+                    if (visualizer.gameObject.activeSelf)
+                    {
+                        visualizer.gameObject.SetActive(false);
+                    }
                 }
-                _imageVisualizers.Clear();
             }
         }
 
@@ -137,39 +139,15 @@ public class ArFoundationArvosController : ArBehaviourSlam
             }
         }
 
-        // Make sure the correct images are used for tracking
-        //
-        if (ArTrackedImageManager.referenceLibrary != ArMutableLibrary)
-        {
-            if (_imageVisualizers.Any())
-            {
-                foreach (var visualizer in _imageVisualizers.Values)
-                {
-                    GameObject.Destroy(visualizer.gameObject);
-                }
-                _imageVisualizers.Clear();
-            }
-            if (ArMutableLibrary != null && ArMutableLibrary.count > 0)
-            {
-                ArTrackedImageManager.referenceLibrary = ArMutableLibrary;
-                EnableImageManager(true);
-            }
-            else if (ArTrackedImageManager.enabled)
-            {
-                EnableImageManager(false);
-                ArTrackedImageManager.referenceLibrary = null;
-            }
-        }
-
+        EnableImageManager(ArMutableLibrary.count > 0);
         if (!HasTriggerImages)
         {
             if (_imageVisualizers.Any())
             {
                 foreach (var visualizer in _imageVisualizers.Values)
                 {
-                    GameObject.Destroy(visualizer.gameObject);
+                    visualizer.gameObject.SetActive(false);
                 }
-                _imageVisualizers.Clear();
             }
             if (!IsSlam)
             {
@@ -265,7 +243,7 @@ public class ArFoundationArvosController : ArBehaviourSlam
             }
         }
 
-        // Delete non active image visualizers
+        // Deactivate non active image visualizers
         foreach (var visualizer in _imageVisualizers.Values)
         {
             if (visualizer.TriggerObject?.poi != null)
@@ -287,7 +265,7 @@ public class ArFoundationArvosController : ArBehaviourSlam
         if (FitToScanOverlay != null)
         {
             // Show the fit-to-scan overlay if there are no images that are Tracking and visible.
-            var hasTriggerImages = ArTrackedImageManager.enabled && ArTrackedImageManager.referenceLibrary != null && ArTrackedImageManager.referenceLibrary.count > 0;
+            var hasTriggerImages = ArTrackedImageManager.enabled && ArMutableLibrary.count > 0;
             var hasActiveObjects = _imageVisualizers.Values.Any(x => x.gameObject.activeSelf);
             var setActive = hasTriggerImages && !hasActiveObjects && !LayerPanelIsActive;
             if (FitToScanOverlay.activeSelf != setActive)
@@ -362,10 +340,9 @@ public class ArFoundationArvosController : ArBehaviourSlam
     {
         foreach (var image in eventArgs.added.Union(eventArgs.updated))
         {
-            ArvosVisualizer visualizer = null;
             var name = image.referenceImage.name;
-            _imageVisualizers.TryGetValue(name, out visualizer);
-            if (image.trackingState == TrackingState.Tracking && visualizer == null)
+            _imageVisualizers.TryGetValue(name, out var visualizer);
+            if (image.trackingState == TrackingState.Tracking && visualizer is null)
             {
                 TriggerObject triggerObject = TriggerObjects.Values.FirstOrDefault(x => x.triggerImageURL == name);
                 if (triggerObject == null)
@@ -376,6 +353,7 @@ public class ArFoundationArvosController : ArBehaviourSlam
                 if (!triggerObject.isActive || triggerObject.layerWebUrl != _layerWebUrl)
                 {
                     // This image was loaded for a different layer
+                    triggerObject.gameObject.SetActive(false);
                     continue;
                 }
 
@@ -387,22 +365,45 @@ public class ArFoundationArvosController : ArBehaviourSlam
                 visualizer.TriggerObject.ActivationTime = DateTime.Now;
 
                 _imageVisualizers.Add(name, visualizer);
+                visualizer.gameObject.SetActive(true);
             }
-            else if (image.trackingState == TrackingState.Tracking && visualizer != null)
+            else if (image.trackingState == TrackingState.Tracking && visualizer is not null)
             {
+                if (!visualizer.TriggerObject.isActive || visualizer.TriggerObject.layerWebUrl != _layerWebUrl)
+                {
+                    // This image was loaded for a different layer
+                    visualizer.TriggerObject.gameObject.SetActive(false);
+                    continue;
+                }
                 visualizer.TriggerObject.LastUpdateTime = DateTime.Now;
+                if (!visualizer.gameObject.activeSelf)
+                {
+                    visualizer.gameObject.SetActive(true);
+                }
             }
-            //else if (image.trackingState == TrackingState.None && visualizer != null)
-            //{
-            //    _imageVisualizers.Remove(name);
-            //    GameObject.Destroy(visualizer.gameObject);
-            //}
         }
-        //foreach (var trackedImage in eventArgs.removed)
-        //{
-        //    ErrorMessage = $"R {trackedImage.referenceImage.name}";
-        //    return;
-        //}
+        foreach (var image in eventArgs.removed)
+        {
+            var name = image.referenceImage.name;
+            _imageVisualizers.TryGetValue(name, out var visualizer);
+            if (visualizer is not null)
+            {
+                if (!visualizer.TriggerObject.isActive || visualizer.TriggerObject.layerWebUrl != _layerWebUrl)
+                {
+                    // This image was loaded for a different layer
+                    visualizer.TriggerObject.gameObject.SetActive(false);
+                    continue;
+                }
+                var trackingTimeout = visualizer.TriggerObject.poi.TrackingTimeout;
+                if (trackingTimeout <= 0)
+                {
+                    if (visualizer.gameObject.activeSelf)
+                    {
+                        visualizer.gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
     }
 
     private void SetAllPlanesActive(bool value)

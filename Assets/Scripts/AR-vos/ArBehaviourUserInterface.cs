@@ -543,24 +543,8 @@ namespace com.arpoise.arpoiseapp
 
                         //message = message.Replace("{DSF}", DurationStretchFactor?.ToString("F2", CultureInfo.InvariantCulture));
 #if HAS_AR_FOUNDATION_4_2
-                        message = message.Replace("{L}", ArMutableLibrary == null ? "null" : string.Empty + ArMutableLibrary.count);
-                        var mString = "null";
-                        if (ArTrackedImageManager != null)
-                        {
-                            mString = ArTrackedImageManager.enabled ? "t" : "f";
-                            if (ArTrackedImageManager.enabled)
-                            {
-                                if (ArTrackedImageManager.referenceLibrary == null)
-                                {
-                                    mString = "RL=null";
-                                }
-                                else
-                                {
-                                    mString = $"{ArTrackedImageManager.referenceLibrary.count}";
-                                }
-                            }
-                        }
-                        message = message.Replace("{M}", mString);
+                        message = message.Replace("{L}", string.Empty + ArMutableLibrary.count);
+                        message = message.Replace("{M}", $"{(ArTrackedImageManager.enabled ? "T" : "F")} {ArTrackedImageManager.trackables.count}");
 #endif
                     }
                     SetInfoText(message);
