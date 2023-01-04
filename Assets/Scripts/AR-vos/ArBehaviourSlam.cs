@@ -31,9 +31,7 @@ ARpoise, see www.ARpoise.com/
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-#if HAS_AR_KIT
-using UnityEngine.XR.iOS;
-#endif
+
 namespace com.arpoise.arpoiseapp
 {
     public class ArBehaviourSlam : ArBehaviourImage
@@ -42,57 +40,10 @@ namespace com.arpoise.arpoiseapp
         private readonly List<GameObject> _slamSceneObjects = new List<GameObject>();
         public readonly List<TriggerObject> VisualizedSlamObjects = new List<TriggerObject>();
 
-        #region Globals
-#if HAS_AR_KIT
-        public GameObject AnchorManager;
-
-        public GameObject PointCloudParticleExample;
-        public GameObject GeneratePlanes;
-        public GameObject HitAnchor;
-        public GameObject DetectAPlaneOverLay;
-        public GameObject PlaneFrame;
-
-        private bool _myIsSlam = false;
-#endif
-
-#if HAS_AR_CORE
-        /// <summary>
-        /// A prefab for tracking and visualizing detected planes.
-        /// </summary>
-        public GameObject DetectedPlanePrefab;
-
-        // SLAM example game objects
-        public GameObject PlaneGenerator;
-        public GameObject PlaneDiscovery;
-        public GameObject PointCloud;
-#endif
-        #endregion
-
         #region Start
         protected override void Start()
         {
             base.Start();
-
-#if HAS_AR_KIT
-            if (!_imageSceneObjects.Any())
-            {
-                _imageSceneObjects.Add(AnchorManager);
-            }
-            if (!_slamSceneObjects.Any())
-            {
-                _slamSceneObjects.Add(PointCloudParticleExample);
-                _slamSceneObjects.Add(GeneratePlanes);
-            }
-#endif
-#if HAS_AR_CORE
-            if (!_slamSceneObjects.Any())
-            {
-                _slamSceneObjects.Add(DetectedPlanePrefab);
-                _slamSceneObjects.Add(PlaneGenerator);
-                _slamSceneObjects.Add(PlaneDiscovery);
-                _slamSceneObjects.Add(PointCloud);
-            }
-#endif
         }
         #endregion
 
@@ -169,53 +120,9 @@ namespace com.arpoise.arpoiseapp
             {
                 if (sceneObject != null && sceneObject.activeSelf != slamObjectsAvailable)
                 {
-#if HAS_AR_FOUNDATION_4_2
                     sceneObject.SetActive(slamObjectsAvailable);
-                    //Debug.Log($"{sceneObject.name} {slamObjectsAvailable}");
-#endif
-#if HAS_AR_CORE
-                    sceneObject.SetActive(slamObjectsAvailable);
-                    //Debug.Log($"{sceneObject.name} {slamObjectsAvailable}");
-#endif
-#if HAS_AR_KIT
-                    sceneObject.SetActive(slamObjectsAvailable);
-                    //Debug.Log($"{sceneObject.name} {slamObjectsAvailable}");
-
-                    if (sceneObject == GeneratePlanes)
-                    {
-                        var component = GeneratePlanes.GetComponent<UnityARGeneratePlane>();
-                        component?.Update();
-                    }
-                    if (sceneObject == PointCloudParticleExample)
-                    {
-                        var component = PointCloudParticleExample.GetComponent<PointCloudParticleExample>();
-                        component?.Update();
-                    }
-#endif
                 }
             }
-#if HAS_AR_KIT
-            if (HitAnchor.activeSelf != IsSlam)
-            {
-                HitAnchor.SetActive(IsSlam);
-                //Debug.Log($"HitAnchor {IsSlam}"); 
-            }
-
-            if (_myIsSlam != slamObjectsAvailable)
-            {
-                _myIsSlam = slamObjectsAvailable;
-
-                if (DetectAPlaneOverLay != null && DetectAPlaneOverLay.gameObject.activeSelf != slamObjectsAvailable)
-                {
-                    DetectAPlaneOverLay.SetActive(slamObjectsAvailable);
-                }
-                
-                if (PlaneFrame != null && PlaneFrame.gameObject.activeSelf != slamObjectsAvailable)
-                {
-                    PlaneFrame.SetActive(slamObjectsAvailable);
-                }
-            }
-#endif
         }
         #endregion
     }

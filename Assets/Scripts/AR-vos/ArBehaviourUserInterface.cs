@@ -34,19 +34,6 @@ using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-#if HAS_AR_CORE
-#else
-#if HAS_AR_KIT
-#else
-#if QUEST_ARPOISE
-#else
-#if HAS_AR_FOUNDATION_4_2
-#else
-using Vuforia;
-#endif
-#endif
-#endif
-#endif
 
 namespace com.arpoise.arpoiseapp
 {
@@ -542,10 +529,8 @@ namespace com.arpoise.arpoiseapp
                         //message = message.Replace("{DGPZ}", DisplayGoalPosition.z.ToString("F1", CultureInfo.InvariantCulture));
 
                         //message = message.Replace("{DSF}", DurationStretchFactor?.ToString("F2", CultureInfo.InvariantCulture));
-#if HAS_AR_FOUNDATION_4_2
                         message = message.Replace("{L}", string.Empty + ArMutableLibrary.count);
                         message = message.Replace("{M}", $"{(ArTrackedImageManager.enabled ? "T" : "F")} {ArTrackedImageManager.trackables.count}");
-#endif
                     }
                     SetInfoText(message);
                     return;

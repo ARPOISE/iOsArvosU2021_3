@@ -32,18 +32,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
-#if HAS_AR_CORE
-using GoogleARCore;
-#else
-#if HAS_AR_FOUNDATION_4_2
-using Unity.Jobs;
-using UnityEngine.Serialization;
-using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.ARFoundation;
-#else
-#endif
-#endif
+using UnityEngine.XR.ARSubsystems;
 
 namespace com.arpoise.arpoiseapp
 {
@@ -77,14 +67,10 @@ namespace com.arpoise.arpoiseapp
         #endregion
 
         #region Protecteds
-#if HAS_AR_CORE
-        protected AugmentedImageDatabase AugmentedImageDatabase;
-#endif
-#if HAS_AR_FOUNDATION_4_2
+
         protected ARTrackedImageManager ArTrackedImageManager;
         protected MutableRuntimeReferenceImageLibrary ArMutableLibrary;
         protected ARSessionOrigin ArSessionOriginScript;
-#endif
         protected bool HasTriggerImages = false;
         protected string InformationMessage = null;
         protected bool ShowInfo = false;
@@ -549,12 +535,6 @@ namespace com.arpoise.arpoiseapp
                     if (t == null)
                     {
                         int newIndex = isSlamUrl ? SlamObjects.Count : TriggerObjects.Count;
-#if HAS_AR_CORE
-                        if (!isSlamUrl)
-                        {
-                            newIndex = AugmentedImageDatabase.Count;
-                        }
-#endif
                         var width = poi.poiObject.triggerImageWidth;
                         t = new TriggerObject
                         {
@@ -575,18 +555,11 @@ namespace com.arpoise.arpoiseapp
                         {
                             TriggerObjects[t.index] = t;
                         }
-#if HAS_AR_CORE
-                        if (!isSlamUrl)
-                        {
-                            AugmentedImageDatabase.AddImage(triggerImageURL, texture, width);
-                        }
-#endif
-#if HAS_AR_FOUNDATION_4_2
+
                         if (!isSlamUrl)
                         {
                             ArMutableLibrary?.ScheduleAddImageWithValidationJob(texture, triggerImageURL, width);
                         }
-#endif
                     }
                     else
                     {

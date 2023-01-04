@@ -1,7 +1,7 @@
 ﻿// Derived from - Live Training: Shop UI with Runtime Scroll Lists - https://unity3d.com/learn/tutorials/topics/user-interface-ui/intro-and-setup
 
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace com.arpoise.arpoiseapp
 {

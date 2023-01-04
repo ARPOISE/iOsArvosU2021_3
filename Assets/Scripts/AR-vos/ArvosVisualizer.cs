@@ -39,15 +39,12 @@ ARpoise, see www.ARpoise.com/
 
 namespace com.arpoise.arpoiseapp
 {
-#if HAS_AR_FOUNDATION_4_2
     using UnityEngine.XR.ARFoundation;
     using UnityEngine.XR.ARSubsystems;
-#endif
     using UnityEngine;
 
     public class ArvosVisualizer : MonoBehaviour
     {
-#if HAS_AR_FOUNDATION_4_2
         /// <summary>
         /// The AugmentedImage to visualize.
         /// </summary>
@@ -155,6 +152,5 @@ namespace com.arpoise.arpoiseapp
                 }
             }
         }
-#endif
     }
 }

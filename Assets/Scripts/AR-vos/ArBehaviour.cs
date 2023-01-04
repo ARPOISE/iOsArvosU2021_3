@@ -28,23 +28,6 @@ ARpoise, see www.ARpoise.com/
 
 */
 
-using System;
-using UnityEngine;
-
-#if HAS_AR_CORE
-#else
-#if HAS_AR_KIT
-#else
-#if QUEST_ARPOISE
-#else
-#if HAS_AR_FOUNDATION_4_2
-#else
-using Vuforia;
-#endif
-#endif
-#endif
-#endif
-
 namespace com.arpoise.arpoiseapp
 {
     public class ArBehaviour : ArBehaviourUserInterface
@@ -53,31 +36,7 @@ namespace com.arpoise.arpoiseapp
         protected override void Start()
         {
             base.Start();
-
-#if QUEST_ARPOISE
-            Debug.Log("QUEST_ARPOISE Start");
-#endif
-#if UNITY_EDITOR
-            Debug.Log("UNITY_EDITOR Start");
-#endif
-
-#if HAS_AR_CORE
-#else
-#if HAS_AR_KIT
-#else
-#if QUEST_ARPOISE
-#else
-#if HAS_AR_FOUNDATION_4_2
-#else
-            ArCamera.GetComponent<VuforiaBehaviour>().enabled = true;
-            VuforiaRuntime.Instance.InitVuforia();
-#endif
-#endif
-#endif
-#endif
-
 #if UNITY_IOS_unused
-
             if (dontDestroyOnLoad)
                 DontDestroyOnLoad(this.gameObject);
             DeepLinkReceiverIsAlive(); // Let the App Controller know it's ok to call URLOpened now.

@@ -39,7 +39,6 @@ using UnityEngine.XR.ARSubsystems;
 
 public class ArFoundationArvosController : ArBehaviourSlam
 {
-#if HAS_AR_FOUNDATION_4_2
     public ArvosVisualizer ArvosVisualizer;
     public GameObject ArSessionOrigin;
 
@@ -412,5 +411,4 @@ public class ArFoundationArvosController : ArBehaviourSlam
             plane.gameObject.SetActive(value);
     }
     #endregion
-#endif
 }

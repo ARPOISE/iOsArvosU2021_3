@@ -35,10 +35,8 @@ using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
-
-#if HAS_AR_FOUNDATION_4_2
 using UnityEngine.XR.ARSubsystems;
-#endif
+
 
 namespace com.arpoise.arpoiseapp
 {
@@ -127,25 +125,13 @@ namespace com.arpoise.arpoiseapp
         #endregion
 
         #region Privates
-#if HAS_AR_CORE
-        private readonly string _clientApplicationName = ArvosApplicationName;
-#else
-#if HAS_AR_KIT
-        private readonly string _clientApplicationName = ArvosApplicationName;
-#else
-#if AndroidArvosU2021_3
-        private readonly string _clientApplicationName = ArvosApplicationName;
-#else
-#if iOsArvosU2021_3
+#if AndroidArvosU2021_3 || iOsArvosU2021_3
         private readonly string _clientApplicationName = ArvosApplicationName;
 #else
         private readonly string _clientApplicationName = ArpoiseApplicationName;
 #endif
-#endif
-#endif
-#endif
         private string _os = "Android";
-        private readonly string _bundle = "20221206";
+        private readonly string _bundle = "20230103";
 
         #endregion
 
@@ -971,29 +957,6 @@ namespace com.arpoise.arpoiseapp
         {
         }
 
-        //#if UNITY_IOS
-        //        public readonly int DeviceAngle = 360;
-        //#endif
-#if UNITY_ANDROID
-        //public readonly int DeviceAngle = 360;
-        //public int DeviceAngle
-        //{
-        //    get
-        //    {
-        //        switch (InitialDeviceOrientation)
-        //        {
-        //            case DeviceOrientation.LandscapeRight:
-        //                return 180;
-        //            case DeviceOrientation.PortraitUpsideDown:
-        //                return 270;
-        //            case DeviceOrientation.Portrait:
-        //                return 90;
-        //            default:
-        //                return 360;
-        //        }
-        //    }
-        //}
-#endif
         private string GetAssetBundleUrl(string url)
         {
 #if UNITY_IOS
@@ -1006,24 +969,10 @@ namespace com.arpoise.arpoiseapp
                 url += "i";
             }
 #endif
-#if AndroidArvosU2021_3
             if (url.Contains("www.arpoise.com/AB/") && !url.Contains("www.arpoise.com/AB/U2021_3/"))
             {
                 url = url.Replace("www.arpoise.com/AB/", "www.arpoise.com/AB/U2021_3/");
             }
-#endif
-#if AndroidArpoiseU2021_3
-            if (url.Contains("www.arpoise.com/AB/") && !url.Contains("www.arpoise.com/AB/U2021_3/"))
-            {
-                url = url.Replace("www.arpoise.com/AB/", "www.arpoise.com/AB/U2021_3/");
-            }
-#endif
-#if iOsArvosU2021_3
-            if (url.Contains("www.arpoise.com/AB/") && !url.Contains("www.arpoise.com/AB/U2021_3/"))
-            {
-                url = url.Replace("www.arpoise.com/AB/", "www.arpoise.com/AB/U2021_3/");
-            }
-#endif
             return url;
         }
 

@@ -27,10 +27,10 @@ Peter Graf, see www.mission-base.com/peter/
 ARpoise, see www.ARpoise.com/
 
 */
+using com.arpoise.arpoiseapp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using com.arpoise.arpoiseapp;
 using UnityEngine;
 
 public class AbEvolutionOfFish : ArFlock

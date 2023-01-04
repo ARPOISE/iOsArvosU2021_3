@@ -28,24 +28,14 @@ ARpoise, see www.ARpoise.com/
 
 */
 
-#if HAS_AR_CORE
-using GoogleARCore;
-#else
-#endif
-
-using System;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace com.arpoise.arpoiseapp
 {
     public class ArBehaviourImage : ArBehaviourUserInterface
     {
         #region Globals
-#if HAS_AR_CORE
-        public GameObject ArCoreDevice;
-#endif
+
         public GameObject FitToScanOverlay;
 
         #endregion
@@ -55,50 +45,6 @@ namespace com.arpoise.arpoiseapp
         {
             base.Start();
 
-#if HAS_AR_CORE
-            if (ArCoreDevice == null)
-            {
-                ErrorMessage = "ArCoreDevice needs to be set.";
-                return;
-            }
-
-            var aRCoreSession = ArCoreDevice.GetComponent<ARCoreSession>();
-            if (aRCoreSession == null)
-            {
-                ErrorMessage = "ARCoreSession needs to be set on ArCoreDevice.";
-                return;
-            }
-
-            var aRCoreSessionConfig = aRCoreSession.SessionConfig;
-            if (aRCoreSessionConfig == null)
-            {
-                ErrorMessage = "ARCoreSessionConfig needs to be set on ARCoreSession.";
-                return;
-            }
-
-            AugmentedImageDatabase = aRCoreSessionConfig.AugmentedImageDatabase;
-            if (AugmentedImageDatabase == null)
-            {
-                ErrorMessage = "AugmentedImageDatabase needs to be set on ARCoreSessionConfig.";
-                return;
-            }
-#endif
-
-#if HAS_AR_KIT
-            if (InfoPanel != null)
-            {
-                var showInfoPanel = PlayerPrefs.GetString(nameof(InfoPanelIsActive));
-                if (!false.ToString().Equals(showInfoPanel))
-                {
-                    var infoPanel = InfoPanel.GetComponent<InfoPanel>();
-                    if (infoPanel != null)
-                    {
-                        infoPanel.Setup(this);
-                        InfoPanel.SetActive(true);
-                    }
-                }
-            }
-#endif
             // Start GetPosition() coroutine 
             StartCoroutine(nameof(GetPosition));
             // Start GetData() coroutine 

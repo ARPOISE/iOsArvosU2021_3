@@ -71,22 +71,11 @@ namespace com.arpoise.arpoiseapp
             }
         }
         protected long CurrentSecond { get; private set; }
-#if HAS_AR_CORE
-        protected const string AppName = "AR-vos";
-#else
-#if HAS_AR_KIT
-        protected const string AppName = "AR-vos";
-#else
-#if AndroidArvosU2021_3
-        protected const string AppName = "AR-vos";
-#else
-#if iOsArvosU2021_3
+
+#if AndroidArvosU2021_3 || iOsArvosU2021_3
         protected const string AppName = "AR-vos";
 #else
         protected const string AppName = "ARpoise";
-#endif
-#endif
-#endif
 #endif
         protected const float PositionTolerance = 1.25f;
         protected int AreaSize = 0;
@@ -297,48 +286,6 @@ namespace com.arpoise.arpoiseapp
         //
         protected IEnumerator GetPosition()
         {
-#if QUEST_ARPOISE
-            // If in quest mode, set a fixed initial location and forget about the location service
-            //
-            {
-                // EOF
-                //FilteredLatitude = OriginalLatitude = 49.020586f;
-                //FilteredLongitude = OriginalLongitude = 12.09294f;
-                // Ay Corona!
-                //FilteredLatitude = OriginalLatitude = 48.158601475435f;
-                //FilteredLongitude = OriginalLongitude = 11.580199727856f;
-
-                // Quest Default
-                FilteredLatitude = OriginalLatitude = 48.158f;
-                FilteredLongitude = OriginalLongitude = -11.58f;
-
-                Debug.Log("QUEST_ARPOISE fixed location, lat " + OriginalLatitude + ", lon " + OriginalLongitude);
-
-                var second = DateTime.Now.Ticks / 10000000L;
-                var random = new System.Random((int)second);
-                var nextMove = second + 5 + random.Next(0, 5);
-
-                while (second > 0)
-                {
-                    second = DateTime.Now.Ticks / 10000000L;
-                    if (second >= nextMove)
-                    {
-                        nextMove = second + 5 + random.Next(0, 5);
-
-                        FilteredLatitude = OriginalLatitude + 0.000001f * random.Next(-15, 15);
-                        FilteredLongitude = OriginalLongitude + 0.000001f * random.Next(-12, 12);
-                        Debug.Log("QUEST_ARPOISE new location, lat " + FilteredLatitude + ", lon " + FilteredLongitude);
-                    }
-                    var arObjectState = ArObjectState;
-                    if (arObjectState != null)
-                    {
-                        PlaceArObjects(arObjectState);
-                    }
-                    yield return new WaitForSeconds(.1f);
-                }
-            }
-            // End of quest mode
-#endif
 #if AndroidArvosU2021_3_Test
             //Test mode, set a fixed initial location and forget about the location service
             //
