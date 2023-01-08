@@ -321,6 +321,16 @@ namespace com.arpoise.arpoiseapp
                 FixedDeviceLatitude = inputPanel.GetLatitude();
                 FixedDeviceLongitude = inputPanel.GetLongitude();
             }
+
+            
+            if (InfoPanel != null)
+            {
+                var infoPanel = InfoPanel.GetComponent<InfoPanel>();
+                if (infoPanel != null)
+                {
+                    infoPanel.Setup(this);
+                }
+            }
         }
         #endregion
 
