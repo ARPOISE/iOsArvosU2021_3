@@ -438,7 +438,7 @@ namespace com.arpoise.arpoiseapp
                 }
 
                 // For the first 300 milliseconds we remember the initial camera heading
-                if (CameraIsInitializing && StartTicks > 0 && DateTime.Now.Ticks > StartTicks + 3000000)
+                if (CameraIsInitializing && StartTicks > 0 && DateTime.Now.Ticks > StartTicks + 2000000)
                 {
                     CameraIsInitializing = false;
                 }

@@ -209,6 +209,14 @@ namespace com.arpoise.arpoiseapp
             }
         }
 
+        public int NumberOfActiveAnimations
+        {
+            get
+            {
+                return AllAnimations.Where(x => x.IsActive).Count();
+            }
+        }
+
         public bool HandleAnimations(ArBehaviourArObject arBehaviour, long startTicks, long nowTicks)
         {
             if (_billboardAnimations.Count > 0)

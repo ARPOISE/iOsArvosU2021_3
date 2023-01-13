@@ -509,6 +509,7 @@ namespace com.arpoise.arpoiseapp
                         message = message.Replace("{N}", string.Empty + arObjectState.Count);
                         message = message.Replace("{O}", string.Empty + arObjectState.CountArObjects());
                         message = message.Replace("{A}", string.Empty + arObjectState.NumberOfAnimations);
+                        message = message.Replace("{AA}", string.Empty + arObjectState.NumberOfActiveAnimations);
                         message = message.Replace("{T}", string.Empty + TriggerObjects.Values.Count(x => x.isActive));
                         message = message.Replace("{I}", string.Empty + TriggerImages.Count);
                         message = message.Replace("{S}", string.Empty + SlamObjects.Count(x => x.isActive));
@@ -538,7 +539,7 @@ namespace com.arpoise.arpoiseapp
                         //message = message.Replace("{DGPY}", DisplayGoalPosition.y.ToString("F1", CultureInfo.InvariantCulture));
                         //message = message.Replace("{DGPZ}", DisplayGoalPosition.z.ToString("F1", CultureInfo.InvariantCulture));
 
-                        //message = message.Replace("{DSF}", DurationStretchFactor?.ToString("F2", CultureInfo.InvariantCulture));
+                        message = message.Replace("{DSF}", DurationStretchFactor?.ToString("F2", CultureInfo.InvariantCulture));
                         message = message.Replace("{L}", string.Empty + ArMutableLibrary.count);
                         message = message.Replace("{M}", $"{(ArTrackedImageManager.enabled ? "T" : "F")} {ArTrackedImageManager.trackables.count}");
                     }

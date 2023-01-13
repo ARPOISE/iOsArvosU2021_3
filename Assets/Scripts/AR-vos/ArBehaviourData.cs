@@ -817,10 +817,6 @@ namespace com.arpoise.arpoiseapp
 
                 if (ArObjectState == null)
                 {
-                    //if (ArSessionOriginScript != null)
-                    //{
-                    //    ArSessionOriginScript.MakeContentAppearAt(SceneAnchor.transform, Quaternion.Euler(0, -Input.compass.trueHeading, 0));
-                    //}
                     ErrorMessage = CreateArObjects(arObjectState, null, SceneAnchor.transform, arObjectState.ArPois);
                     arObjectState.ArPois.Clear();
 
