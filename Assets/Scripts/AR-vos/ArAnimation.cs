@@ -362,6 +362,31 @@ namespace com.arpoise.arpoiseapp
             return false;
         }
 
+        public bool ApplicationIsSleeping { get; private set; }
+
+        public void SetActive(GameObject gameObject, bool active)
+        {
+            if (ApplicationIsSleeping)
+            {
+                active = false;
+            }
+
+            if (gameObject.activeSelf != active)
+            {
+                gameObject.SetActive(active);
+            }
+        }
+
+        public void HandleApplicationSleep(bool shouldSleep)
+        {
+            ApplicationIsSleeping = shouldSleep;
+            var gameObject = GameObject;
+            if (gameObject != null)
+            {
+                SetActive(gameObject, !shouldSleep);
+            }
+        }
+
         private void HandleAudioSource()
         {
             var gameObject = GameObject;

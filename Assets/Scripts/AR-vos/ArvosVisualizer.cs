@@ -99,7 +99,7 @@ namespace com.arpoise.arpoiseapp
                 //return;
             }
 
-            var arObjectState = ArBehaviour.ArObjectState;
+            var arObjectState = ArBehaviour?.ArObjectState;
             if (arObjectState != null && TriggerObject != null && !_gameObjectCreated)
             {
                 _gameObjectCreated = true;

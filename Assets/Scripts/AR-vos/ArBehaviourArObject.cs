@@ -29,11 +29,20 @@ ARpoise, see www.ARpoise.com/
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
+
+#if HAS_AR_CORE
+using GoogleARCore;
+#else
+#endif
+
+#if HAS_AR_FOUNDATION_4_2
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.XR.ARFoundation;
+#endif
 
 namespace com.arpoise.arpoiseapp
 {
@@ -67,10 +76,14 @@ namespace com.arpoise.arpoiseapp
         #endregion
 
         #region Protecteds
-
+#if HAS_AR_CORE
+        protected AugmentedImageDatabase AugmentedImageDatabase;
+#endif
+#if HAS_AR_FOUNDATION_4_2
         protected ARTrackedImageManager ArTrackedImageManager;
         protected MutableRuntimeReferenceImageLibrary ArMutableLibrary;
         protected ARSessionOrigin ArSessionOriginScript;
+#endif
         protected bool HasTriggerImages = false;
         protected string InformationMessage = null;
         protected bool ShowInfo = false;
@@ -82,6 +95,29 @@ namespace com.arpoise.arpoiseapp
         protected readonly List<TriggerObject> SlamObjects = new List<TriggerObject>();
         protected volatile RefreshRequest RefreshRequest = null;
         #endregion
+
+        [NonSerialized]
+        public volatile bool TakeScreenshot = false;
+        protected IEnumerator TakeScreenshotRoutine()
+        {
+            for (; ; )
+            {
+                while (!TakeScreenshot)
+                {
+                    yield return new WaitForSeconds(.01f);
+                }
+                if (AllowTakeScreenshot < 1)
+                {
+                    TakeScreenshot = false;
+                    continue;
+                }
+
+                var name = $"Screenshot_{DateTime.Now:yyMMdd_HHmmss_fff}.jpg";
+                ScreenCapture.CaptureScreenshot(name, AllowTakeScreenshot);
+
+                TakeScreenshot = false;
+            }
+        }
 
         #region ArObjects
         public GameObject CreateObject(GameObject objectToAdd)
@@ -535,6 +571,12 @@ namespace com.arpoise.arpoiseapp
                     if (t == null)
                     {
                         int newIndex = isSlamUrl ? SlamObjects.Count : TriggerObjects.Count;
+#if HAS_AR_CORE
+                        if (!isSlamUrl)
+                        {
+                            newIndex = AugmentedImageDatabase.Count;
+                        }
+#endif
                         var width = poi.poiObject.triggerImageWidth;
                         t = new TriggerObject
                         {
@@ -556,10 +598,18 @@ namespace com.arpoise.arpoiseapp
                             TriggerObjects[t.index] = t;
                         }
 
+#if HAS_AR_FOUNDATION_4_2
                         if (!isSlamUrl)
                         {
                             ArMutableLibrary?.ScheduleAddImageWithValidationJob(texture, triggerImageURL, width);
                         }
+#endif
+#if HAS_AR_CORE
+                        if (!isSlamUrl)
+                        {
+                            AugmentedImageDatabase.AddImage(triggerImageURL, texture, width);
+                        }
+#endif
                     }
                     else
                     {
@@ -646,6 +696,10 @@ namespace com.arpoise.arpoiseapp
             int areaSize = -1;
             int areaWidth = -1;
             bool applyKalmanFilter = true;
+            int allowTakeScreenshot = -1;
+
+            int applicationSleepStartMinute = -1;
+            int applicationSleepEndMinute = -1;
 
             foreach (var layer in layers)
             {
@@ -692,6 +746,21 @@ namespace com.arpoise.arpoiseapp
                     {
                         timeSync = layer.TimeSync;
                     }
+                    if (allowTakeScreenshot <= 0)
+                    {
+                        allowTakeScreenshot = layer.AllowTakeScreenshot;
+                    }
+
+                    var layerApplicationSleepStartMinute = layer.ApplicationSleepStartMinute;
+                    if (applicationSleepStartMinute < 0 && layerApplicationSleepStartMinute >= 0)
+                    {
+                        applicationSleepStartMinute = layerApplicationSleepStartMinute;
+                    }
+                    var layerApplicationSleepEndMinute = layer.ApplicationSleepEndMinute;
+                    if (applicationSleepEndMinute < 0 && layerApplicationSleepEndMinute >= 0)
+                    {
+                        applicationSleepEndMinute = layerApplicationSleepEndMinute;
+                    }
                 }
 
                 if (layer.hotspots == null)
@@ -711,7 +780,13 @@ namespace com.arpoise.arpoiseapp
             PositionUpdateInterval = positionUpdateInterval;
             AreaSize = areaSize;
             AreaWidth = areaWidth;
+            AllowTakeScreenshot = allowTakeScreenshot;
             TimeSync(timeSync);
+#if HAS_AR_FOUNDATION_4_2
+            EnableOcclusion(layers.FirstOrDefault());
+#endif
+            ApplicationSleepStartMinute = applicationSleepStartMinute;
+            ApplicationSleepEndMinute = applicationSleepEndMinute;
 
             bool setBleachingValues = false;
             if (_bleachingValue != bleachingValue)

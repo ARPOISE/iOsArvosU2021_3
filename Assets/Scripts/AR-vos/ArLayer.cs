@@ -34,6 +34,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+#if HAS_AR_FOUNDATION_4_2
+using UnityEngine.XR.ARSubsystems;
+#endif
 
 namespace com.arpoise.arpoiseapp
 {
@@ -558,7 +561,15 @@ namespace com.arpoise.arpoiseapp
         }
 
         [NonSerialized]
-        private HashSet<string> _actionLabels = new HashSet<string>(new string[] { nameof(PositionUpdateInterval), nameof(TimeSync) });
+        private HashSet<string> _actionLabels = new HashSet<string>(new string[]
+        {
+            nameof(PositionUpdateInterval), nameof(TimeSync), nameof(ApplicationSleepInterval), nameof(AllowTakeScreenshot),
+            "OcclusionEnvironmentDepthMode",
+            "OcclusionPreferenceMode",
+            "OcclusionHumanSegmentationStencilMode",
+            "OcclusionHumanSegmentationDepthMode"
+        });
+
         [NonSerialized]
         private bool? _showInfo;
         public bool ShowInfo
@@ -572,6 +583,7 @@ namespace com.arpoise.arpoiseapp
                 return _showInfo.Value;
             }
         }
+
         [NonSerialized]
         private string _informationMessage;
         public string InformationMessage
@@ -589,6 +601,9 @@ namespace com.arpoise.arpoiseapp
                 return _informationMessage;
             }
         }
+
+        #region ActionLabels
+
         [NonSerialized]
         private float? _positionUpdateInterval;
         public float PositionUpdateInterval
@@ -639,6 +654,235 @@ namespace com.arpoise.arpoiseapp
                 }
                 return _timeSync.Value;
             }
+        }
+
+        [NonSerialized]
+        private string _applicationSleepInterval;
+        public string ApplicationSleepInterval
+        {
+            get
+            {
+                if (_applicationSleepInterval == null)
+                {
+                    var action = actions?.FirstOrDefault(x => /*x.showActivity &&*/ nameof(ApplicationSleepInterval).Equals(x.label?.Trim()) && !string.IsNullOrWhiteSpace(x.activityMessage));
+                    if (action != null)
+                    {
+                        _applicationSleepInterval = action.activityMessage.Trim();
+                    }
+                }
+                if (_applicationSleepInterval == null)
+                {
+                    _applicationSleepInterval = string.Empty;
+                }
+                return _applicationSleepInterval;
+            }
+        }
+
+        [NonSerialized]
+        private int? _allowTakeScreenshot;
+        public int AllowTakeScreenshot
+        {
+            get
+            {
+                if (_allowTakeScreenshot == null)
+                {
+                    var action = actions?.FirstOrDefault(x => /*x.showActivity &&*/ nameof(AllowTakeScreenshot).Equals(x.label?.Trim()) && !string.IsNullOrWhiteSpace(x.activityMessage));
+                    if (action != null)
+                    {
+                        int value;
+                        if (int.TryParse(action.activityMessage.Trim(), out value))
+                        {
+                            _allowTakeScreenshot = value;
+                        }
+                    }
+                }
+                if (_allowTakeScreenshot == null)
+                {
+                    _allowTakeScreenshot = 0;
+                }
+                return _allowTakeScreenshot.Value;
+            }
+        }
+
+#if HAS_AR_FOUNDATION_4_2
+        [NonSerialized]
+        private EnvironmentDepthMode? _occlusionEnvironmentDepthMode = null;
+        public EnvironmentDepthMode OcclusionEnvironmentDepthMode
+        {
+            get
+            {
+                if (_occlusionEnvironmentDepthMode == null)
+                {
+                    _occlusionEnvironmentDepthMode = EnvironmentDepthMode.Best;
+                    var value = _occlusionEnvironmentDepthMode.Value;
+                    var action = actions?.FirstOrDefault(x => x.showActivity && nameof(OcclusionEnvironmentDepthMode).Equals(x.label?.Trim()) && !string.IsNullOrWhiteSpace(x.activityMessage));
+                    if (action != null && Enum.TryParse(action.activityMessage, out value))
+                    {
+                        _occlusionEnvironmentDepthMode = value;
+                    }
+                    
+                }
+                return _occlusionEnvironmentDepthMode.Value;
+            }
+        }
+
+        [NonSerialized]
+        private OcclusionPreferenceMode? _occlusionPreferenceMode = null;
+        public OcclusionPreferenceMode OcclusionPreferenceMode
+        {
+            get
+            {
+                if (_occlusionPreferenceMode == null)
+                {
+                    _occlusionPreferenceMode = OcclusionPreferenceMode.PreferEnvironmentOcclusion;
+                    var value = _occlusionPreferenceMode.Value;
+                    var action = actions?.FirstOrDefault(x => x.showActivity && nameof(OcclusionPreferenceMode).Equals(x.label?.Trim()) && !string.IsNullOrWhiteSpace(x.activityMessage));
+                    if (action != null && Enum.TryParse(action.activityMessage, out value))
+                    {
+                        _occlusionPreferenceMode = value;
+                    }
+                }
+                return _occlusionPreferenceMode.Value;
+            }
+        }
+
+        [NonSerialized]
+        private HumanSegmentationStencilMode? _occlusionHumanSegmentationStencilMode = null;
+        public HumanSegmentationStencilMode OcclusionHumanSegmentationStencilMode
+        {
+            get
+            {
+                if (_occlusionHumanSegmentationStencilMode == null)
+                {
+                    _occlusionHumanSegmentationStencilMode = HumanSegmentationStencilMode.Best;
+                    var value = _occlusionHumanSegmentationStencilMode.Value;
+                    var action = actions?.FirstOrDefault(x => x.showActivity && nameof(OcclusionHumanSegmentationStencilMode).Equals(x.label?.Trim()) && !string.IsNullOrWhiteSpace(x.activityMessage));
+                    if (action != null && Enum.TryParse(action.activityMessage, out value))
+                    {
+                        _occlusionHumanSegmentationStencilMode = value;
+                    }
+                }
+                return _occlusionHumanSegmentationStencilMode.Value;
+            }
+        }
+
+        [NonSerialized]
+        private HumanSegmentationDepthMode? _occlusionHumanSegmentationDepthMode = null;
+        public HumanSegmentationDepthMode OcclusionHumanSegmentationDepthMode
+        {
+            get
+            {
+                if (_occlusionHumanSegmentationDepthMode == null)
+                {
+                    _occlusionHumanSegmentationDepthMode = HumanSegmentationDepthMode.Best;
+                    var value = _occlusionHumanSegmentationDepthMode.Value;
+                    var action = actions?.FirstOrDefault(x => x.showActivity && nameof(OcclusionHumanSegmentationDepthMode).Equals(x.label?.Trim()) && !string.IsNullOrWhiteSpace(x.activityMessage));
+                    if (action != null && Enum.TryParse(action.activityMessage, out value))
+                    {
+                        _occlusionHumanSegmentationDepthMode = value;
+                    }
+                }
+                return _occlusionHumanSegmentationDepthMode.Value;
+            }
+        }
+#endif
+        #endregion
+
+        [NonSerialized]
+        private int? _applicationSleepStartMinute;
+        public int ApplicationSleepStartMinute
+        {
+            get
+            {
+                if (_applicationSleepStartMinute == null)
+                {
+                    _applicationSleepStartMinute = -1;
+
+                    var applicationSleepInterval = ApplicationSleepInterval;
+                    if (!string.IsNullOrWhiteSpace(applicationSleepInterval))
+                    {
+                        var parts = applicationSleepInterval.Split('-');
+                        if (parts.Length > 1)
+                        {
+                            int value;
+                            if (TryParseMinutes(parts[0], out value))
+                            {
+                                _applicationSleepStartMinute = value;
+                            }
+                        }
+                    }
+                }
+                return _applicationSleepStartMinute.Value;
+            }
+        }
+
+        [NonSerialized]
+        private int? _applicationSleepEndMinute;
+        public int ApplicationSleepEndMinute
+        {
+            get
+            {
+                if (_applicationSleepEndMinute == null)
+                {
+                    _applicationSleepEndMinute = -1;
+
+                    var applicationSleepInterval = ApplicationSleepInterval;
+                    if (!string.IsNullOrWhiteSpace(applicationSleepInterval))
+                    {
+                        var parts = applicationSleepInterval.Split('-');
+                        if (parts.Length > 1)
+                        {
+                            int value;
+                            if (TryParseMinutes(parts[1], out value))
+                            {
+                                _applicationSleepEndMinute = value;
+                            }
+                        }
+                    }
+                }
+                return _applicationSleepEndMinute.Value;
+            }
+        }
+
+        private bool TryParseMinutes(string s, out int result)
+        {
+            result = -1;
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                return false;
+            }
+            if (s.Contains(':'))
+            {
+                var parts = s.Split(':');
+                if (parts.Length > 0)
+                {
+                    int hours;
+                    if (!int.TryParse(parts[0], out hours))
+                    {
+                        return false;
+                    }
+                    if (parts.Length > 1)
+                    {
+                        int minutes;
+                        if (!int.TryParse(parts[1], out minutes))
+                        {
+                            return false;
+                        }
+                        result = hours * 60 + minutes;
+                        return true;
+                    }
+                    result = hours * 60;
+                    return true;
+                }
+                return false;
+            }
+
+            if (int.TryParse(s, out result))
+            {
+                result *= 60;
+                return true;
+            }
+            return false;
         }
     }
 }

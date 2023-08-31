@@ -32,8 +32,14 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+
 #if PLATFORM_ANDROID
 using UnityEngine.Android;
+#endif
+
+#if HAS_AR_FOUNDATION_4_2
+using UnityEngine.XR.ARSubsystems;
+using UnityEngine.XR.ARFoundation;
 #endif
 
 namespace com.arpoise.arpoiseapp
@@ -286,6 +292,48 @@ namespace com.arpoise.arpoiseapp
         //
         protected IEnumerator GetPosition()
         {
+#if QUEST_ARPOISE
+            // If in quest mode, set a fixed initial location and forget about the location service
+            //
+            {
+                // EOF
+                //FilteredLatitude = OriginalLatitude = 49.020586f;
+                //FilteredLongitude = OriginalLongitude = 12.09294f;
+                // Ay Corona!
+                //FilteredLatitude = OriginalLatitude = 48.158601475435f;
+                //FilteredLongitude = OriginalLongitude = 11.580199727856f;
+
+                // Quest Default
+                FilteredLatitude = OriginalLatitude = 48.158f;
+                FilteredLongitude = OriginalLongitude = -11.58f;
+
+                Debug.Log("QUEST_ARPOISE fixed location, lat " + OriginalLatitude + ", lon " + OriginalLongitude);
+
+                var second = DateTime.Now.Ticks / 10000000L;
+                var random = new System.Random((int)second);
+                var nextMove = second + 5 + random.Next(0, 5);
+
+                while (second > 0)
+                {
+                    second = DateTime.Now.Ticks / 10000000L;
+                    if (second >= nextMove)
+                    {
+                        nextMove = second + 5 + random.Next(0, 5);
+
+                        FilteredLatitude = OriginalLatitude + 0.000001f * random.Next(-15, 15);
+                        FilteredLongitude = OriginalLongitude + 0.000001f * random.Next(-12, 12);
+                        Debug.Log("QUEST_ARPOISE new location, lat " + FilteredLatitude + ", lon " + FilteredLongitude);
+                    }
+                    var arObjectState = ArObjectState;
+                    if (arObjectState != null)
+                    {
+                        PlaceArObjects(arObjectState);
+                    }
+                    yield return new WaitForSeconds(.1f);
+                }
+            }
+            // End of quest mode
+#endif
 #if AndroidArvosU2021_3_Test
             //Test mode, set a fixed initial location and forget about the location service
             //
@@ -437,7 +485,7 @@ namespace com.arpoise.arpoiseapp
                     InitialDeviceOrientation = Input.deviceOrientation;
                 }
 
-                // For the first 300 milliseconds we remember the initial camera heading
+                // For the first 200 milliseconds we remember the initial camera heading
                 if (CameraIsInitializing && StartTicks > 0 && DateTime.Now.Ticks > StartTicks + 2000000)
                 {
                     CameraIsInitializing = false;
@@ -518,7 +566,31 @@ namespace com.arpoise.arpoiseapp
                 DurationStretchFactor = (_timeSync + restTime) / _timeSync;
             }
         }
-        #endregion
+
+        protected int ApplicationSleepStartMinute = -1;
+        protected int ApplicationSleepEndMinute = -1;
+        protected bool ApplicationIsSleeping = false;
+        protected int AllowTakeScreenshot = -1;
+
+#if HAS_AR_FOUNDATION_4_2
+        public void EnableOcclusion(ArLayer layer)
+        {
+            if (layer is not null)
+            {
+#if UNITY_IOS
+                var occlusionManager = ArCamera.GetComponent<AROcclusionManager>();
+                if (occlusionManager is not null)
+                {
+                    occlusionManager.requestedEnvironmentDepthMode = layer.OcclusionEnvironmentDepthMode;
+                    occlusionManager.requestedOcclusionPreferenceMode = layer.OcclusionPreferenceMode;
+                    occlusionManager.requestedHumanStencilMode = layer.OcclusionHumanSegmentationStencilMode;
+                    occlusionManager.requestedHumanDepthMode = layer.OcclusionHumanSegmentationDepthMode;
+                }
+#endif
+            }
+        }
+#endif
+#endregion
 
         #region Misc
         protected virtual IEnumerator GetData()

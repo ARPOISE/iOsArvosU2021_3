@@ -35,8 +35,9 @@ using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
+#if HAS_AR_FOUNDATION_4_2
 using UnityEngine.XR.ARSubsystems;
-
+#endif
 
 namespace com.arpoise.arpoiseapp
 {
@@ -125,13 +126,21 @@ namespace com.arpoise.arpoiseapp
         #endregion
 
         #region Privates
+#if HAS_AR_CORE
+        private readonly string _clientApplicationName = ArvosApplicationName;
+#else
+#if HAS_AR_KIT
+        private readonly string _clientApplicationName = ArvosApplicationName;
+#else
 #if AndroidArvosU2021_3 || iOsArvosU2021_3
         private readonly string _clientApplicationName = ArvosApplicationName;
 #else
         private readonly string _clientApplicationName = ArpoiseApplicationName;
 #endif
+#endif
+#endif
         private string _os = "Android";
-        private readonly string _bundle = "20230103";
+        private readonly string _bundle = "20230610";
 
         #endregion
 
@@ -175,8 +184,12 @@ namespace com.arpoise.arpoiseapp
                 var nextPageKey = string.Empty;
 
                 IsSlam = false;
+                ApplicationSleepStartMinute = -1;
+                ApplicationSleepEndMinute = -1;
+                AllowTakeScreenshot = -1;
 
                 #region Download all pages of the layer
+
                 var layerWebUrl = LayerWebUrl;
                 LayerWebUrl = null;
                 for (; ; )
@@ -240,6 +253,7 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
+#if HAS_AR_FOUNDATION_4_2
                     if (request.result == UnityWebRequest.Result.DataProcessingError)
                     {
                         if (setError)
@@ -249,7 +263,7 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
-
+#endif
                     var text = request.downloadHandler.text;
                     if (string.IsNullOrWhiteSpace(text))
                     {
@@ -336,7 +350,6 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
-
                     if (request.result == UnityWebRequest.Result.ConnectionError)
                     {
                         if (setError)
@@ -355,6 +368,7 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
+#if HAS_AR_FOUNDATION_4_2
                     if (request.result == UnityWebRequest.Result.DataProcessingError)
                     {
                         if (setError)
@@ -364,7 +378,7 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
-
+#endif
                     var assetBundle = DownloadHandlerAssetBundle.GetContent(request);
                     if (assetBundle == null)
                     {
@@ -514,7 +528,6 @@ namespace com.arpoise.arpoiseapp
                             }
                             break;
                         }
-
                         if (request.result == UnityWebRequest.Result.ConnectionError)
                         {
                             if (setError)
@@ -533,6 +546,7 @@ namespace com.arpoise.arpoiseapp
                             }
                             continue;
                         }
+#if HAS_AR_FOUNDATION_4_2
                         if (request.result == UnityWebRequest.Result.DataProcessingError)
                         {
                             if (setError)
@@ -542,7 +556,7 @@ namespace com.arpoise.arpoiseapp
                             }
                             continue;
                         }
-
+#endif
                         var text = request.downloadHandler.text;
                         if (string.IsNullOrWhiteSpace(text))
                         {
@@ -669,6 +683,7 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
+#if HAS_AR_FOUNDATION_4_2
                     if (request.result == UnityWebRequest.Result.DataProcessingError)
                     {
                         if (setError)
@@ -678,7 +693,7 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
-
+#endif
                     var assetBundle = DownloadHandlerAssetBundle.GetContent(request);
                     if (assetBundle == null)
                     {
@@ -757,7 +772,6 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
-
                     if (request.result == UnityWebRequest.Result.ConnectionError)
                     {
                         if (setError)
@@ -776,6 +790,7 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
+#if HAS_AR_FOUNDATION_4_2
                     if (request.result == UnityWebRequest.Result.DataProcessingError)
                     {
                         if (setError)
@@ -785,7 +800,7 @@ namespace com.arpoise.arpoiseapp
                         }
                         continue;
                     }
-
+#endif
                     var texture = DownloadHandlerTexture.GetContent(request);
                     if (texture == null)
                     {
@@ -965,10 +980,12 @@ namespace com.arpoise.arpoiseapp
                 url += "i";
             }
 #endif
+#if HAS_AR_FOUNDATION_4_2
             if (url.Contains("www.arpoise.com/AB/") && !url.Contains("www.arpoise.com/AB/U2021_3/"))
             {
                 url = url.Replace("www.arpoise.com/AB/", "www.arpoise.com/AB/U2021_3/");
             }
+#endif
             return url;
         }
 

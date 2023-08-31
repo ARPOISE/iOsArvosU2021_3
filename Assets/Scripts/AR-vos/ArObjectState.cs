@@ -240,7 +240,8 @@ namespace com.arpoise.arpoiseapp
                 var cameraMain = Camera.main;
                 var ray = cameraMain.ScreenPointToRay(new Vector3(cameraMain.pixelWidth / 2, cameraMain.pixelHeight / 2, 0f));
 
-                if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity))
+                RaycastHit hitInfo;
+                if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
                 {
                     var objectHit = hitInfo.transform.gameObject;
                     if (objectHit != null)
@@ -268,8 +269,11 @@ namespace com.arpoise.arpoiseapp
             var hit = false;
             if (_onClickAnimations.Count > 0 && Input.GetMouseButtonDown(0))
             {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity))
+                var cameraMain = Camera.main;
+                var ray = cameraMain.ScreenPointToRay(Input.mousePosition);
+
+                RaycastHit hitInfo;
+                if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
                 {
                     var objectHit = hitInfo.transform.gameObject;
                     if (objectHit != null)
@@ -346,6 +350,11 @@ namespace com.arpoise.arpoiseapp
                     }
                 }
             }
+
+            if (!hit && Input.GetMouseButtonDown(0))
+            {
+                arBehaviour.TakeScreenshot = true;
+            }
             return hit;
         }
 
@@ -365,6 +374,14 @@ namespace com.arpoise.arpoiseapp
                 }
             }
             return result?.Distinct().ToList();
+        }
+
+        public void HandleApplicationSleep(bool shouldSleep)
+        {
+            foreach (var arAnimation in AllAnimations)
+            {
+                arAnimation.HandleApplicationSleep(shouldSleep);
+            }
         }
     }
 }
